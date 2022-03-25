@@ -52,42 +52,32 @@ class MainWindow(QWidget):
 
         self.show()
 
-    
+    def __create_url(self,res):
+        openstreetmap_url = "https://www.openstreetmap.org/?mlat=%s&mlon=%s#map=12"%(res["latitude"], res["longitude"])
+        return openstreetmap_url
 
     def on_click(self):
         hostname = self.text.text()
         ip = self.text2.text()
         key = self.text3.text()
 
-        if hostname == "":
+        if hostname == "" or ip == "" or key == "":
             QMessageBox.about(self, "Error", "Please fill the field")
+        
         else:
             res = self.__query(hostname, ip, key)
             if res:
-                self.label2.setText("Answer%s" % (res["Hello"]))
+                self.label2.setText("Hello")
                 self.label2.adjustSize()
                 self.show()
+                Urls = main.__create_url(res)
+                QDesktopServices.openUrl(QUrl(Urls))
 
-        if ip == "":
-            QMessageBox.about(self, "Error", "Please fill the ip")
-        else:
-            res2 = self._query(hostname, ip, key)
-            if res2:
-                self.label4.setText("Answer%s" % (res["Hello2"]))
-                self.label4.adjustSize()
-                self.show()
-
-        if key == "":
-            QMessageBox.about(self, "Error", "Please fill the ip key")
-        else:
-            res3 = self._query(hostname, ip, key)
-            if res3:
-                self.label4.setText("Answer%s" % (res["Hello3"]))
-                self.label4.adjustSize()
-                self.show()
+        
 
 
         
+    
 
     def __query(self, hostname, ip, key):
         url = "http://%s/ip/%s/?key=%s" %(hostname, ip, key)
@@ -102,9 +92,9 @@ class MainWindow(QWidget):
 
 
 
-
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     main = MainWindow()
     app.exec_()
+   
+
